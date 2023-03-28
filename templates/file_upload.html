@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Upload</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css">
+</head>
+<body>
+    <div class="container mx-auto py-6">
+        <h1 class="text-2xl font-bold mb-6">File Upload</h1>
+        <form action="{% url 'file_upload' %}" method="post" enctype="multipart/form-data" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2" for="file">
+                    Select a file to upload:
+                </label>
+                <input type="file" name="file" id="file" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                {% if form.file.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.file.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <!-- <div class="mb-4">
+                <label class="block text-gray-700 font-bold mb-2" for="text_input">
+                    Enter some text:
+                </label>
+                <textarea name="text_input" id="text_input" class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="6"></textarea>
+                {% if form.text_input.errors %}
+                    <p class="text-red-500 text-xs italic">{{ form.text_input.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div class="flex items-center justify-between"> -->
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Upload
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
