@@ -5,6 +5,9 @@ import folium
 from folium import plugins
 from .forms import MyForm
 from django.http import HttpResponse
+from .forms import ImageForm, ImageForm2
+from .models import Image, Image2
+
 # Create your views here.
 
 
@@ -37,3 +40,36 @@ def file_upload(request):
     else:
         form = MyForm()
     return render(request, 'file_upload.html', {'form': form})
+
+
+def image_upload(request):
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            images = request.FILES.getlist('image')
+            for image in images:
+                Image.objects.create(image=image)
+            # Redirect to a success page here
+            return HttpResponse('File Uploaded Successfully')
+    else:
+        form = ImageForm()
+    return render(request, 'image_upload.html', {'form': form})
+
+
+
+def image_uploads(request):
+    if request.method == 'POST':
+        form = ImageForm2(request.POST, request.FILES)
+        if form.is_valid():
+            image_files = request.FILES.getlist('image_file')
+            for image_file in image_files:
+                Image2.objects.create(image_file=image_file)
+            # Redirect to a success page here
+            return HttpResponse('File Uploaded Successfully')
+
+       
+        else:
+            print(form.errors)
+    else:
+        form = ImageForm2()
+    return render(request, 'image_uploads.html', {'form': form})

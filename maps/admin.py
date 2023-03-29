@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Data
+from .models import Data, Image, Image2
 
 # Register your models here.
 
@@ -9,3 +9,5 @@ class DataAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Data, DataAdmin)
+admin.site.register(Image)
+admin.site.register(Image2)

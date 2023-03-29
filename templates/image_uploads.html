@@ -1,0 +1,18 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+  <h1 class="text-2xl font-bold mb-4">Upload Images</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-4">
+      <label class="block font-bold text-gray-700 mb-2" for="id_image">Images</label>
+      <input class="border border-gray-400 p-2 w-full" id="id_image" multiple name="image_file" type="file">
+      {% if form.image_file.errors %}
+      <p class="text-red-500 text-xs italic mt-2">{{ form.image_file.errors }}</p>
+      {% endif %}
+    </div>
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Upload</button>
+  </form>
+</div>
+{% endblock %}
