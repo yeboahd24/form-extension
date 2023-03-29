@@ -7,7 +7,7 @@ from .forms import MyForm
 from django.http import HttpResponse
 from .forms import ImageForm, ImageForm2
 from .models import Image, Image2
-
+import requests
 # Create your views here.
 
 
@@ -73,3 +73,30 @@ def image_uploads(request):
     else:
         form = ImageForm2()
     return render(request, 'image_uploads.html', {'form': form})
+
+
+
+def get_weather(city):
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid=3c7c773669d848278185995171e95f3a&units=metric"
+    response = requests.get(url)
+    data = response.json()
+    if 'main' in data and 'weather' in data:
+        weather = {
+            'city': city,
+            'temperature': data['main']['temp'],
+            'description': data['weather'][0]['description'],
+            'icon': data['weather'][0]['icon'],
+        }
+        return weather
+    else:
+        return None
+
+def home(request):
+    city = "London"  # default city
+    if "city" in request.GET:
+        city = request.GET["city"]
+    weather = get_weather(city)
+    context = {
+        "weather": weather,
+    }
+    return render(request, "weather.html", context)

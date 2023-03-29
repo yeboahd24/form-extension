@@ -2,6 +2,8 @@ from django.db import models
 import geocoder
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFit
+
+
 # Create your models here.
 
 
@@ -26,13 +28,14 @@ class Data(models.Model):
 class Image(models.Model):
     image = models.ImageField(upload_to="images/")
 
-    
 
 class Image2(models.Model):
     image_file = ProcessedImageField(
-        upload_to='uploads/',
+        upload_to="uploads/",
         processors=[ResizeToFit(width=800, height=600)],
-        format='JPEG',
-        options={'quality': 60}
-        )
+        format="JPEG",
+        options={"quality": 60},
+    )
     uploaded_at = models.DateTimeField(auto_now_add=True)
+
+
