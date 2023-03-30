@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exchange Rates</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto py-8">
+        <h1 class="text-3xl font-bold mb-4">Exchange Rates</h1>
+        <table class="table-auto w-full">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Country</th>
+                    <th class="px-4 py-2">Exchange Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for country, rate in rates %}
+                    <tr>
+                        <td class="border px-4 py-2">{{ country }}</td>
+                        <td class="border px-4 py-2">{{ rate }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -17,7 +17,16 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from maps.views import index, file_upload, image_upload, image_uploads, home
+from maps.views import (
+    index,
+    file_upload,
+    image_upload,
+    image_uploads,
+    home,
+    exchange_rates,
+)
+from django.urls import path
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -26,6 +35,7 @@ urlpatterns = [
     path("image_upload/", image_upload, name="image_upload"),
     path("image_uploads/", image_uploads, name="image_uploads"),
     path("weather/", home, name="home"),
+    path("exchange_rates/", exchange_rates, name="exchange_rates"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
