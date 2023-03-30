@@ -39,3 +39,11 @@ class Image2(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 
+
+class Invitation(models.Model):
+    email = models.EmailField()
+    token = models.CharField(max_length=50)
+    status = models.CharField(max_length=20, default='pending')
+
+    def __str__(self):
+        return self.email

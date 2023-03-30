@@ -124,3 +124,71 @@ def exchange_rates(request):
             rates.append((country, rate))
     context = {"rates": rates}
     return render(request, "exchange_rates.html", context)
+
+
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.conf import settings
+from .models import Invitation
+from django.utils.crypto import get_random_string
+
+
+def invite(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        token = get_random_string(length=32)
+        invitation = Invitation.objects.create(email=email, token=token)
+        if invitation is None:
+            return redirect("error")
+        invitation_url = request.build_absolute_uri(f"/accept/{token}/")
+        send_mail(
+            "Invitation to join our website",
+            f"You have been invited to join our website. Click on the following link to accept the invitation: {invitation_url}",
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            fail_silently=False,
+        )
+        return redirect("success")
+    return render(request, "invite.html")
+
+
+def accept(request, token):
+    invitation = Invitation.objects.filter(token=token).first()
+    if invitation is None:
+        return redirect("error")
+    if invitation.status != "pending":
+        return redirect("error")
+    invitation.status = "accepted"
+    invitation.save()
+    send_mail(
+        "Invitation Accepted",
+        f"The invitation sent to {invitation.email} has been accepted.",
+        settings.DEFAULT_FROM_EMAIL,
+        [settings.DEFAULT_FROM_EMAIL],
+        fail_silently=False,
+    )
+    return redirect("success", status="accepted", email=invitation.email)
+
+
+def success(request, status=None, email=None):
+    if status == "accepted":
+        message = f"Thank you for accepting the invitation. You can now log in using your email address: {email}."
+    elif status == "declined":
+        message = "Thank you for letting us know that you cannot join us at this time."
+    else:
+        message = "Your invitation has been sent. Please check your email for further instructions."
+    return render(request, "success.html", {"message": message})
+
+
+def error(request):
+    return render(request, "error.html")
+
+
+def decline(request):
+    token = request.GET.get("token")
+    invitation = Invitation.objects.filter(token=token).first()
+    if invitation and invitation.status == "pending":
+        invitation.status = "declined"
+        invitation.save()
+        return redirect("success", status="declined", email=invitation.email)
+    return redirect("error")

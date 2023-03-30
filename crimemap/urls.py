@@ -24,8 +24,12 @@ from maps.views import (
     image_uploads,
     home,
     exchange_rates,
+    invite,
+    accept,
+    success,
+    error,
+    decline
 )
-from django.urls import path
 
 
 urlpatterns = [
@@ -36,6 +40,12 @@ urlpatterns = [
     path("image_uploads/", image_uploads, name="image_uploads"),
     path("weather/", home, name="home"),
     path("exchange_rates/", exchange_rates, name="exchange_rates"),
+    path("invite/", invite, name="invite"),
+    path("success/", success, name="success"),
+    path('success/<str:status>/<str:email>/', success, name='success'),
+    path('accept/<str:token>/', accept, name='accept'),
+    path("error/", error, name="error"),
+    path("decline/", decline, name="decline"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -159,3 +159,10 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10 MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760   # 10 MB
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'doc', 'docx'}
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "dominic@panabios.org"
+EMAIL_HOST_PASSWORD = "atiigbchasogaaxi"
