@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "maps",
     "location_field.apps.DefaultConfig",
     "leaflet",
+    "phonenumber_field",
 ]
 
 MIDDLEWARE = [

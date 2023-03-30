@@ -28,7 +28,10 @@ from maps.views import (
     accept,
     success,
     error,
-    decline
+    decline,
+    ContactView,
+    contact_success,
+    contact_view,
 )
 
 
@@ -46,6 +49,11 @@ urlpatterns = [
     path('accept/<str:token>/', accept, name='accept'),
     path("error/", error, name="error"),
     path("decline/", decline, name="decline"),
+    path('contact/', ContactView.as_view(), name='contact'),
+    path('contact_success/', contact_success, name='contact_success'),
+    path('contact_view/', contact_view, name='contact_view'),
+
+    
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

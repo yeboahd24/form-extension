@@ -192,3 +192,49 @@ def decline(request):
         invitation.save()
         return redirect("success", status="declined", email=invitation.email)
     return redirect("error")
+
+
+
+from django.views.generic import FormView
+from django.urls import reverse_lazy
+import json
+
+from .forms import ContactForm
+
+class ContactView(FormView):
+    template_name = 'contact.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('contact_success')
+
+    def form_valid(self, form):
+        # Add code to handle the form submission
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+    
+    def form_invalid(self, form):
+        #print the error
+        print(form.errors)
+
+
+def contact_success(request):
+    return render(request, "contact_success.html")
+
+
+
+from django.contrib import messages
+
+def contact_view(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Process the form data
+            messages.success(request, 'Thank you for contacting us! We will get back to you as soon as possible.')
+            return redirect('contact_success')
+        else:
+            if not form.cleaned_data.get('phone_number'):
+                messages.error(request, 'Please enter a phone number.')
+    else:
+        form = ContactForm()
+    return render(request, 'contact.html', {'form': form})

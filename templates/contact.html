@@ -1,0 +1,65 @@
+{% extends 'contact_base.html' %}
+
+{% block content %}
+  <form method="post" class="max-w-md mx-auto">
+    {% csrf_token %}
+    <div class="mb-4">
+      <label for="id_name" class="block text-gray-700 font-bold mb-2">Name</label>
+      <input type="text" name="name" id="id_name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ form.name.value|default:'' }}" required>
+      {% if form.name.errors %}
+        <ul class="errorlist">
+          {% for error in form.name.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div class="mb-4">
+      <label for="id_email" class="block text-gray-700 font-bold mb-2">Email</label>
+      <input type="email" name="email" id="id_email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ form.email.value|default:'' }}" required>
+      {% if form.email.errors %}
+        <ul class="errorlist">
+          {% for error in form.email.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div class="mb-4">
+      <label for="id_phone_number" class="block text-gray-700 font-bold mb-2">Phone Number</label>
+      <input type="tel" name="phone_number" id="id_phone_number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+      {% if form.phone_number.errors %}
+        <ul class="errorlist">
+          {% for error in form.phone_number.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
+  </form>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"></script>
+  <script>
+    var phoneInput = document.getElementById("id_phone_number");
+
+    var iti = window.intlTelInput(phoneInput, {
+      initialCountry: "auto",
+      separateDialCode: false,
+      utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    });
+
+    var form = document.querySelector('form');
+    form.addEventListener('submit', function(event) {
+      var phone = iti.getNumber();
+      if (!phone) {
+        event.preventDefault();
+        alert('Please enter a valid phone number.');
+      } else {
+        document.getElementById("id_phone_number").value = phone;
+      }
+    });
+  </script>
+{% endblock %}

@@ -19,21 +19,35 @@ class MyForm(forms.Form):
         return file
 
 
-
-
 class ImageForm(forms.ModelForm):
     class Meta:
         model = Image
-        fields = ('image',)
+        fields = ("image",)
         widgets = {
-            'image': forms.ClearableFileInput(attrs={'multiple': True}),
+            "image": forms.ClearableFileInput(attrs={"multiple": True}),
         }
 
 
 class ImageForm2(forms.ModelForm):
     class Meta:
         model = Image2
-        fields = ('image_file',)
+        fields = ("image_file",)
         widgets = {
-            'image_file': forms.ClearableFileInput(attrs={'multiple': True}),
+            "image_file": forms.ClearableFileInput(attrs={"multiple": True}),
         }
+
+
+from django import forms
+from phonenumber_field.formfields import PhoneNumberField
+
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=100)
+    email = forms.EmailField()
+    phone_number = PhoneNumberField()
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number')
+        if phone_number:
+            phone_number.country_code = self.cleaned_data.get('phone_number_country_code')
+            return phone_number
+        return None
