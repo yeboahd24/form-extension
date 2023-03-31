@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from maps.views import (
@@ -32,6 +32,9 @@ from maps.views import (
     ContactView,
     contact_success,
     contact_view,
+    refresh_captcha,
+    my_view
+
 )
 
 
@@ -52,8 +55,13 @@ urlpatterns = [
     path('contact/', ContactView.as_view(), name='contact'),
     path('contact_success/', contact_success, name='contact_success'),
     path('contact_view/', contact_view, name='contact_view'),
+    path('captcha/', include('captcha.urls')),
+    path('refresh/', refresh_captcha, name='captcha-refresh'),
+    path('my_view/', my_view, name='my_view'),
+
 
     
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

@@ -42,7 +42,11 @@ INSTALLED_APPS = [
     "location_field.apps.DefaultConfig",
     "leaflet",
     "phonenumber_field",
+    "captcha",
+    "crispy_forms",
 ]
+
+CRISPY_TEMPLATE_PACK = 'tailwind'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

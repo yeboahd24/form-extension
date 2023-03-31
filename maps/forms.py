@@ -51,3 +51,12 @@ class ContactForm(forms.Form):
             phone_number.country_code = self.cleaned_data.get('phone_number_country_code')
             return phone_number
         return None
+
+
+from captcha.fields import CaptchaField
+
+class MyForm(forms.Form):
+    name = forms.CharField(max_length=100)
+    email = forms.EmailField()
+    message = forms.CharField(widget=forms.Textarea)
+    captcha = CaptchaField()

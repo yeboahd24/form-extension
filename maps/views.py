@@ -238,3 +238,54 @@ def contact_view(request):
     else:
         form = ContactForm()
     return render(request, 'contact.html', {'form': form})
+
+
+
+from django.http import JsonResponse
+from .forms import MyForm
+
+def my_view(request):
+    if request.method == 'POST':
+        form = MyForm(request.POST)
+        if form.is_valid():
+            # Do something with the form data
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
+    else:
+        form = MyForm()
+    return render(request, 'captcha_form.html', {'form': form})
+
+
+# from captcha.helpers import captcha_image_url
+# from captcha.models import CaptchaStore
+
+# def refresh_captcha(request):
+#     if request.is_ajax():
+#         new_captcha = CaptchaStore.generate_key()
+#         image_url = captcha_image_url(new_captcha)
+#         response_data = {'image_url': image_url, 'key': new_captcha}
+#         return JsonResponse(response_data)
+#     else:
+#         return JsonResponse({'error': 'Invalid request'})
+    
+
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.http import require_GET
+from django.views.decorators.csrf import csrf_exempt
+from captcha.helpers import captcha_image_url, captcha_audio_url
+from captcha.models import CaptchaStore
+
+@require_GET
+@csrf_exempt
+def refresh_captcha(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        new_key = CaptchaStore.generate_key()
+        to_json_response = {
+            'key': new_key,
+            'image_url': captcha_image_url(new_key),
+            'audio_url': captcha_audio_url(new_key),
+        }
+        return JsonResponse(to_json_response)
+    else:
+        return HttpResponseBadRequest()
