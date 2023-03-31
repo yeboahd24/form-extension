@@ -289,3 +289,78 @@ def refresh_captcha(request):
         return JsonResponse(to_json_response)
     else:
         return HttpResponseBadRequest()
+    
+
+
+
+
+
+from django.shortcuts import render, redirect
+from django.core.signing import TimestampSigner, BadSignature
+from django.core.mail import send_mail
+from django.contrib.auth import authenticate, login
+from django.utils import timezone
+from .models import OneTimeUseLink
+from django.conf import settings
+from django.contrib.auth import get_user_model
+
+
+
+User = get_user_model()
+def generate_one_time_use_link(user):
+    signer = TimestampSigner()
+    link = signer.sign(user.email)
+    expiration_time = timezone.now() + timezone.timedelta(minutes=5)
+    OneTimeUseLink.objects.create(user=user, link=link, expiration_time=expiration_time)
+    return link
+# def send_one_time_use_link(user, link):
+#     subject = 'Your one-time use login link'
+#     message = f'Click this link to log in: <a href="{link}">{link}</a>'
+#     from_email = settings.DEFAULT_FROM_EMAIL
+#     recipient_list = [user.email]
+#     send_mail(subject, message, from_email, recipient_list, html_message=message)
+
+def send_one_time_use_link(user, link):
+    domain = 'localhost:8000'  # Replace with your domain name and port number
+    path = f'/login/{link}/'
+    url = f'http://{domain}{path}'
+    subject = 'Your one-time use login link'
+    message = f'Click this link to log in: <a href="{url}">{url}</a>'
+    from_email = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [user.email]
+    send_mail(subject, message, from_email, recipient_list, html_message=message)
+
+
+def login_with_one_time_use_link(request, link):
+    try:
+        signer = TimestampSigner()
+        email = signer.unsign(link, max_age=300)
+        user = User.objects.get(email=email)
+        one_time_use_link = OneTimeUseLink.objects.get(user=user, link=link, expiration_time__gte=timezone.now())
+        one_time_use_link.delete()
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
+        return render(request, 'login_success.html')
+    except (ValueError, BadSignature, User.DoesNotExist, OneTimeUseLink.DoesNotExist):
+        return render(request, 'login_failure.html')
+
+def login_with_email(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        try:
+            user = User.objects.get(email=email)
+            link = generate_one_time_use_link(user)
+            send_one_time_use_link(user, link)
+            return redirect('check_email')
+        except User.DoesNotExist:
+            return render(request, 'login.html', {'error': 'Invalid email address'})
+    else:
+        return render(request, 'login.html')
+    
+
+
+def check_email(request):
+    return render(request, 'check_email.html')
+
+
+

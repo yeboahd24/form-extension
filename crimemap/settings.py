@@ -165,9 +165,21 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760   # 10 MB
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'doc', 'docx'}
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "dominic@panabios.org"
-EMAIL_HOST_PASSWORD = "atiigbchasogaaxi"
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.gmail.com"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = "dominic@panabios.org"
+# EMAIL_HOST_PASSWORD = "atiigbchasogaaxi"
+
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "admin@panabios.org"
+
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = 'b66c13b8340f57'
+EMAIL_HOST_PASSWORD = 'd88a0bc8b4f9d2'
+EMAIL_PORT = '2525'
+
+
+AUTH_USER_MODEL = 'maps.User'
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']

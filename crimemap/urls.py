@@ -33,7 +33,10 @@ from maps.views import (
     contact_success,
     contact_view,
     refresh_captcha,
-    my_view
+    my_view,
+    login_with_email,
+    login_with_one_time_use_link,
+    check_email,
 
 )
 
@@ -58,9 +61,10 @@ urlpatterns = [
     path('captcha/', include('captcha.urls')),
     path('refresh/', refresh_captcha, name='captcha-refresh'),
     path('my_view/', my_view, name='my_view'),
+    path('login/', login_with_email, name='login'),
+    path('login/<str:link>/', login_with_one_time_use_link, name='login-with-one-time-use-link'),
+    path('check_email/', check_email, name='check_email'),
 
-
-    
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
