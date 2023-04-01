@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.15/dist/tailwind.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js"></script></head>
+<body>
+    <div x-data="{ todos: [] }">
+        <input type="text" x-model="newTodo">
+        <button @click="todos.push(newTodo); newTodo = ''">Add</button>
+        <ul>
+            <template x-for="todo in todos" :key="todo">
+                <li x-text="todo"></li>
+            </template>
+        </ul>
+    </div>
+</body>
+</html>

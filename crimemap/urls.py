@@ -37,6 +37,9 @@ from maps.views import (
     login_with_email,
     login_with_one_time_use_link,
     check_email,
+    TodoList,
+    todo,
+    todo_list
 
 )
 
@@ -64,6 +67,9 @@ urlpatterns = [
     path('login/', login_with_email, name='login'),
     path('login/<str:link>/', login_with_one_time_use_link, name='login-with-one-time-use-link'),
     path('check_email/', check_email, name='check_email'),
+    # path('todos/', TodoList.as_view(), name='todos'),
+    path('todo/', todo, name='todo'),
+    path('todos/', todo_list, name='todos'),
 
 ]
 if settings.DEBUG:

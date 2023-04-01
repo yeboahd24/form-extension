@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "captcha",
     "crispy_forms",
+    "rest_framework",
 ]
 
 CRISPY_TEMPLATE_PACK = 'tailwind'

@@ -194,17 +194,17 @@ def decline(request):
     return redirect("error")
 
 
-
 from django.views.generic import FormView
 from django.urls import reverse_lazy
 import json
 
 from .forms import ContactForm
 
+
 class ContactView(FormView):
-    template_name = 'contact.html'
+    template_name = "contact.html"
     form_class = ContactForm
-    success_url = reverse_lazy('contact_success')
+    success_url = reverse_lazy("contact_success")
 
     def form_valid(self, form):
         # Add code to handle the form submission
@@ -212,9 +212,9 @@ class ContactView(FormView):
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form))
-    
+
     def form_invalid(self, form):
-        #print the error
+        # print the error
         print(form.errors)
 
 
@@ -222,39 +222,42 @@ def contact_success(request):
     return render(request, "contact_success.html")
 
 
-
 from django.contrib import messages
 
+
 def contact_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ContactForm(request.POST)
         if form.is_valid():
             # Process the form data
-            messages.success(request, 'Thank you for contacting us! We will get back to you as soon as possible.')
-            return redirect('contact_success')
+            messages.success(
+                request,
+                "Thank you for contacting us! We will get back to you as soon as possible.",
+            )
+            return redirect("contact_success")
         else:
-            if not form.cleaned_data.get('phone_number'):
-                messages.error(request, 'Please enter a phone number.')
+            if not form.cleaned_data.get("phone_number"):
+                messages.error(request, "Please enter a phone number.")
     else:
         form = ContactForm()
-    return render(request, 'contact.html', {'form': form})
-
+    return render(request, "contact.html", {"form": form})
 
 
 from django.http import JsonResponse
 from .forms import MyForm
 
+
 def my_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = MyForm(request.POST)
         if form.is_valid():
             # Do something with the form data
-            return JsonResponse({'success': True})
+            return JsonResponse({"success": True})
         else:
-            return JsonResponse({'success': False, 'errors': form.errors})
+            return JsonResponse({"success": False, "errors": form.errors})
     else:
         form = MyForm()
-    return render(request, 'captcha_form.html', {'form': form})
+    return render(request, "captcha_form.html", {"form": form})
 
 
 # from captcha.helpers import captcha_image_url
@@ -268,7 +271,7 @@ def my_view(request):
 #         return JsonResponse(response_data)
 #     else:
 #         return JsonResponse({'error': 'Invalid request'})
-    
+
 
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_GET
@@ -276,23 +279,20 @@ from django.views.decorators.csrf import csrf_exempt
 from captcha.helpers import captcha_image_url, captcha_audio_url
 from captcha.models import CaptchaStore
 
+
 @require_GET
 @csrf_exempt
 def refresh_captcha(request):
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
         new_key = CaptchaStore.generate_key()
         to_json_response = {
-            'key': new_key,
-            'image_url': captcha_image_url(new_key),
-            'audio_url': captcha_audio_url(new_key),
+            "key": new_key,
+            "image_url": captcha_image_url(new_key),
+            "audio_url": captcha_audio_url(new_key),
         }
         return JsonResponse(to_json_response)
     else:
         return HttpResponseBadRequest()
-    
-
-
-
 
 
 from django.shortcuts import render, redirect
@@ -305,14 +305,17 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 
 
-
 User = get_user_model()
+
+
 def generate_one_time_use_link(user):
     signer = TimestampSigner()
     link = signer.sign(user.email)
     expiration_time = timezone.now() + timezone.timedelta(minutes=5)
     OneTimeUseLink.objects.create(user=user, link=link, expiration_time=expiration_time)
     return link
+
+
 # def send_one_time_use_link(user, link):
 #     subject = 'Your one-time use login link'
 #     message = f'Click this link to log in: <a href="{link}">{link}</a>'
@@ -320,11 +323,12 @@ def generate_one_time_use_link(user):
 #     recipient_list = [user.email]
 #     send_mail(subject, message, from_email, recipient_list, html_message=message)
 
+
 def send_one_time_use_link(user, link):
-    domain = 'localhost:8000'  # Replace with your domain name and port number
-    path = f'/login/{link}/'
-    url = f'http://{domain}{path}'
-    subject = 'Your one-time use login link'
+    domain = "localhost:8000"  # Replace with your domain name and port number
+    path = f"/login/{link}/"
+    url = f"http://{domain}{path}"
+    subject = "Your one-time use login link"
     message = f'Click this link to log in: <a href="{url}">{url}</a>'
     from_email = settings.DEFAULT_FROM_EMAIL
     recipient_list = [user.email]
@@ -336,31 +340,65 @@ def login_with_one_time_use_link(request, link):
         signer = TimestampSigner()
         email = signer.unsign(link, max_age=300)
         user = User.objects.get(email=email)
-        one_time_use_link = OneTimeUseLink.objects.get(user=user, link=link, expiration_time__gte=timezone.now())
+        one_time_use_link = OneTimeUseLink.objects.get(
+            user=user, link=link, expiration_time__gte=timezone.now()
+        )
         one_time_use_link.delete()
-        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        user.backend = "django.contrib.auth.backends.ModelBackend"
         login(request, user)
-        return render(request, 'login_success.html')
+        return render(request, "login_success.html")
     except (ValueError, BadSignature, User.DoesNotExist, OneTimeUseLink.DoesNotExist):
-        return render(request, 'login_failure.html')
+        return render(request, "login_failure.html")
+
 
 def login_with_email(request):
-    if request.method == 'POST':
-        email = request.POST['email']
+    if request.method == "POST":
+        email = request.POST["email"]
         try:
             user = User.objects.get(email=email)
             link = generate_one_time_use_link(user)
             send_one_time_use_link(user, link)
-            return redirect('check_email')
+            return redirect("check_email")
         except User.DoesNotExist:
-            return render(request, 'login.html', {'error': 'Invalid email address'})
+            return render(request, "login.html", {"error": "Invalid email address"})
     else:
-        return render(request, 'login.html')
-    
+        return render(request, "login.html")
 
 
 def check_email(request):
-    return render(request, 'check_email.html')
+    return render(request, "check_email.html")
+
+
+from rest_framework import generics
+from .models import Todo
+from .serializers import TodoSerializer
+
+class TodoList(generics.ListCreateAPIView):
+    queryset = Todo.objects.all()
+    serializer_class = TodoSerializer
+
+
+def todo(request):
+    return render(request, "todo.html")
 
 
 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from rest_framework.parsers import JSONParser
+from .models import Todo
+from .serializers import TodoSerializer
+
+@csrf_exempt
+def todo_list(request):
+    if request.method == 'GET':
+        todos = Todo.objects.all()
+        serializer = TodoSerializer(todos, many=True)
+        return JsonResponse(serializer.data, safe=False)
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = TodoSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)
