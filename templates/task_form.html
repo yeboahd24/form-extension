@@ -1,0 +1,12 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+    <h1 class="text-xl font-semibold mb-4">{{ view.title }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="border border-gray-500 rounded px-2 py-1 mt-4">Save</button>
+    </form>
+{% endblock %}

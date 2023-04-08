@@ -402,3 +402,73 @@ def todo_list(request):
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
+    
+
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from .models import Task
+from .forms import TaskForm
+from dal import autocomplete
+
+class TaskListView(ListView):
+    model = Task
+    template_name = 'task_list.html'
+
+class TaskCreateView(CreateView):
+    model = Task
+    form_class = TaskForm
+    template_name = 'task_form.html'
+    success_url = reverse_lazy('task_list')
+
+class TaskUpdateView(UpdateView):
+    model = Task
+    form_class = TaskForm
+    template_name = 'task_form.html'
+    success_url = reverse_lazy('task_list')
+
+class TaskDeleteView(DeleteView):
+    model = Task
+    success_url = reverse_lazy('task_list')
+
+
+
+class TaskAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Task.objects.all()
+        if self.q:
+            qs = qs.filter(title__istartswith=self.q)
+        return qs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

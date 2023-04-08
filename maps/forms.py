@@ -60,3 +60,16 @@ class MyForm(forms.Form):
     email = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
     captcha = CaptchaField()
+
+
+from dal import autocomplete
+from maps.models import Task
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ('title', 'description', 'completed')
+        # widgets = {
+        #     'title': autocomplete.ModelSelect2(url='task-autocomplete'),
+        # }
+        

@@ -39,9 +39,16 @@ from maps.views import (
     check_email,
     TodoList,
     todo,
-    todo_list
-
+    todo_list,
+    TaskListView,
+    TaskCreateView,
+    TaskUpdateView,
+    TaskDeleteView,
+    TaskAutoComplete
 )
+
+# from dal import autocomplete
+# from maps.models import Task
 
 
 urlpatterns = [
@@ -54,24 +61,35 @@ urlpatterns = [
     path("exchange_rates/", exchange_rates, name="exchange_rates"),
     path("invite/", invite, name="invite"),
     path("success/", success, name="success"),
-    path('success/<str:status>/<str:email>/', success, name='success'),
-    path('accept/<str:token>/', accept, name='accept'),
+    path("success/<str:status>/<str:email>/", success, name="success"),
+    path("accept/<str:token>/", accept, name="accept"),
     path("error/", error, name="error"),
     path("decline/", decline, name="decline"),
-    path('contact/', ContactView.as_view(), name='contact'),
-    path('contact_success/', contact_success, name='contact_success'),
-    path('contact_view/', contact_view, name='contact_view'),
-    path('captcha/', include('captcha.urls')),
-    path('refresh/', refresh_captcha, name='captcha-refresh'),
-    path('my_view/', my_view, name='my_view'),
-    path('login/', login_with_email, name='login'),
-    path('login/<str:link>/', login_with_one_time_use_link, name='login-with-one-time-use-link'),
-    path('check_email/', check_email, name='check_email'),
+    path("contact/", ContactView.as_view(), name="contact"),
+    path("contact_success/", contact_success, name="contact_success"),
+    path("contact_view/", contact_view, name="contact_view"),
+    path("captcha/", include("captcha.urls")),
+    path("refresh/", refresh_captcha, name="captcha-refresh"),
+    path("my_view/", my_view, name="my_view"),
+    path("login/", login_with_email, name="login"),
+    path(
+        "login/<str:link>/",
+        login_with_one_time_use_link,
+        name="login-with-one-time-use-link",
+    ),
+    path("check_email/", check_email, name="check_email"),
     # path('todos/', TodoList.as_view(), name='todos'),
-    path('todo/', todo, name='todo'),
-    path('todos/', todo_list, name='todos'),
-
+    path("todo/", todo, name="todo"),
+    path("todos/", todo_list, name="todos"),
+      path("task/", TaskListView.as_view(), name="task_list"),
+    path("create/", TaskCreateView.as_view(), name="task_create"),
+    path("update/<int:pk>/", TaskUpdateView.as_view(), name="task_update"),
+    path("delete/<int:pk>/", TaskDeleteView.as_view(), name="task_delete"),
+    path(
+        "task-autocomplete/",
+        TaskAutoComplete.as_view(),
+        name="task-autocomplete",
+    ),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
