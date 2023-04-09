@@ -120,3 +120,8 @@ class Task(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     completed = models.BooleanField(default=False)
+
+
+class Recording(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    audio_file = models.FileField(upload_to='recordings/')

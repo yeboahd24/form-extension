@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Record Audio</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
+    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="max-w-2xl mx-auto mt-10">
+        <div class="bg-white rounded shadow-md p-5">
+            <h1 class="text-lg font-semibold mb-5">Record Audio</h1>
+            <div class="flex flex-col items-center">
+                <div class="flex justify-center items-center w-full mb-4">
+                    <div class="w-1/2">
+                        <button id="start-button"
+                            class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                            Start Recording
+                        </button>
+                        <button id="stop-button"
+                            class="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded hidden">
+                            Stop Recording
+                        </button>
+                    </div>
+                </div>
+                <audio id="audio-player" class="hidden"></audio>
+                <div class="w-full">
+                    <video id="video-player" class="video-js"></video>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://vjs.zencdn.net/7.10.2/video.js"></script>
+    <script>
+        window.onload = function () {
+            const startButton = document.getElementById('start-button');
+            const stopButton = document.getElementById('stop-button');
+            const audioPlayer = document.getElementById('audio-player');
+            const videoPlayer = videojs('video-player', {
+                controls: true,
+                preload: 'auto'
+            });
+            let mediaRecorder;
+            let chunks = [];
+
+            const handleStart = (event) => {
+                const mediaConstraints = { audio: true };
+                startButton.disabled = true;
+                stopButton.classList.remove('hidden');
+
+                navigator.mediaDevices.getUserMedia(mediaConstraints)
+                    .then(function (stream) {
+                        mediaRecorder = new MediaRecorder(stream);
+                        mediaRecorder.ondataavailable = function (event) {
+                            chunks.push(event.data);
+                        };
+                        mediaRecorder.onstop = function (event) {
+                            const blob = new Blob(chunks, { 'type': 'audio/mpeg; codecs=opus' });
+                            const audioUrl = URL.createObjectURL(blob);
+                            audioPlayer.src = audioUrl;
+                            videoPlayer.src({ type: "audio/mpeg", src: audioUrl });
+                            stopButton.disabled = true;
+                            startButton.disabled = false;
+                            chunks = [];
+                        };
+                        mediaRecorder.start();
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                        startButton.disabled = false;
+                        stopButton.classList.add('hidden');
+                    });
+            };
+            startButton.addEventListener('click', handleStart);
+
+            const handleStop = (event) => {
+                stopButton.disabled = true;
+                mediaRecorder.stop();
+
+                const blob = new Blob(chunks, { 'type': 'audio/mpeg; codecs=opus' });
+                const formData = new FormData();
+                formData.append('audio_file', blob, 'recording.mp3');
+                fetch('/save-recording/', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (response.ok) {
+                        console.log('Recording saved successfully!');
+                    }
+                }).catch(error => {
+                    console.error('Error saving recording:', error);
+                });
+
+                videoPlayer.reset();
+            };
+
+            stopButton.addEventListener('click', handleStop);
+        };
+    </script>
+</body>
+
+</html>

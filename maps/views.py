@@ -441,12 +441,25 @@ class TaskAutoComplete(autocomplete.Select2QuerySetView):
 
 
 
+from django.http import JsonResponse
+from maps.models import Recording
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def save_recording(request):
+    if request.method == 'POST':
+        recording = Recording()
+        recording.audio_file = request.FILES['audio_file']
+        recording.save()
+        return JsonResponse({'status': 'ok'})
+    else:
+        return JsonResponse({'status': 'error'})
 
 
 
-
-
-
+@csrf_exempt
+def record(request):
+    return render(request, 'record.html')
 
 
 
