@@ -46,7 +46,9 @@ from maps.views import (
     TaskDeleteView,
     TaskAutoComplete,
     record,
-    save_recording
+    save_recording,
+    upload_file,
+    download_file
 )
 
 # from dal import autocomplete
@@ -94,6 +96,8 @@ urlpatterns = [
     ),
     path('record/', record, name='record'),
     path('save-recording/', save_recording, name='save-recording'),
+    path('upload-file/', upload_file, name='upload-file'),
+    path('download-file/', download_file, name='download-file'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

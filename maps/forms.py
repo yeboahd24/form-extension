@@ -73,3 +73,6 @@ class TaskForm(forms.ModelForm):
         #     'title': autocomplete.ModelSelect2(url='task-autocomplete'),
         # }
         
+
+class FileForm(forms.Form):
+    uploaded_file = forms.FileField()

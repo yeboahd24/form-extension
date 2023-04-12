@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Upload File</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css">
+  </head>
+  <body>
+    <div class="container mx-auto py-8">
+      <h1 class="text-2xl font-bold mb-4">Upload File</h1>
+      {% if file_uploaded %}
+        <p class="text-green-600 mb-4">File uploaded successfully!</p>
+        <a href="{{ download_url }}" download="{{ file_name }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
+          Download {{ file_name }}
+        </a>
+      {% endif %}
+      <form method="post" enctype="multipart/form-data" class="max-w-md mx-auto">
+        {% csrf_token %}
+        <div class="mb-4">
+          <label class="block text-gray-700 font-bold mb-2" for="uploaded_file">
+            Upload File
+          </label>
+          <input type="file" name="uploaded_file" id="uploaded_file" class="border rounded py-2 px-3 w-full">
+        </div>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Upload
+        </button>
+      </form>
+    </div>
+  </body>
+</html>

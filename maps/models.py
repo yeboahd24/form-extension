@@ -125,3 +125,12 @@ class Task(models.Model):
 class Recording(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     audio_file = models.FileField(upload_to='recordings/')
+
+
+
+class File(models.Model):
+    uploaded_file = models.FileField(upload_to='uploads/')
+    zip_file = models.FileField(upload_to='zip/')
+
+    def __str__(self):
+        return self.uploaded_file.name

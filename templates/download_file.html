@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Download File</title>
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss/dist/tailwind.min.css">
+  </head>
+  <body>
+    <div class="container mx-auto py-8">
+      <h1 class="text-2xl font-bold mb-4">Download File</h1>
+      <p class="mb-4">Click the button below to download the file:</p>
+      <a href="{{ file_url }}" download="{{ file_name }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Download {{ file_name }}
+      </a>
+    </div>
+  </body>
+</html>

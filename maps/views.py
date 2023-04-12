@@ -464,9 +464,50 @@ def record(request):
 
 
 
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+import zipfile
+from .models import File
+from django.core.files.uploadhandler import TemporaryFileUploadHandler
+import zipfile
+import tempfile
+
+
+def download_file(request, pk):
+    file = File.objects.get(pk=pk)
+    response = HttpResponse(file.zip_file.read())
+    response['Content-Type'] = 'application/zip'
+    response['Content-Disposition'] = f'attachment; filename="{file.uploaded_file.name}.zip"'
+    return response
 
 
 
+def zip_files(file_list):
+    with tempfile.NamedTemporaryFile(delete=False) as temp_zip:
+        with zipfile.ZipFile(temp_zip, 'w') as zip_file:
+            for f in file_list:
+                with TemporaryFileUploadHandler(f, None) as handler:
+                    handler.file_name = f.name
+                    uploaded_file = handler.file.file
+                    zip_file.write(uploaded_file.name, uploaded_file.name)
+    return temp_zip.name
+
+def upload_file(request):
+    if request.method == 'POST':
+        file_list = request.FILES.getlist('file')
+        temp_files = []
+        for uploaded_file in file_list:
+            with TemporaryFileUploadHandler(uploaded_file, None) as handler:
+                handler.file_name = uploaded_file.name
+                temp_file = handler.file.file
+                temp_files.append(temp_file)
+        zip_file_path = zip_files(temp_files)
+        with open(zip_file_path, 'rb') as zip_file:
+            response = HttpResponse(zip_file.read(), content_type='application/zip')
+            # save the zip file in the response as the name of the original file
+            response['Content-Disposition'] = f'attachment; filename="file.zip"'
+            return response
+    return render(request, 'upload_file.html')
 
 
 
