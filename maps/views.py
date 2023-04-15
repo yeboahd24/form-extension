@@ -516,11 +516,38 @@ def upload_file(request):
 
 
 
+from django.shortcuts import render
+from django.views.generic.edit import FormView
+from django.urls import reverse_lazy
+from django import forms
+from formtools.wizard.views import SessionWizardView
+class ContactForm1(forms.Form):
+    name = forms.CharField()
+    email = forms.EmailField()
+    age = forms.IntegerField()
 
+class ContactForm2(forms.Form):
+    subject = forms.CharField()
+    message = forms.CharField(widget=forms.Textarea)
 
+class ContactWizard(SessionWizardView):
+    form_list = [ContactForm1, ContactForm2]
+    template_name = 'contact_form.html'
+    success_url = '/done/'
 
+    def done(self, form_list, **kwargs):
+        form_data = process_form_data(form_list)
+        return render(self.request, 'done.html', {'form_data': form_data})
 
+def process_form_data(form_list):
+    form_data = [form.cleaned_data for form in form_list]
+    return form_data
 
+def home_view(request):
+    return render(request, 'home.html', {})
+
+def done(request):
+    return render(request, 'done.html', {})
 
 
 

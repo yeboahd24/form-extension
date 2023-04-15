@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "captcha",
     "crispy_forms",
     "rest_framework",
+    "formtools",
 ]
 
 CRISPY_TEMPLATE_PACK = 'tailwind'

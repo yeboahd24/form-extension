@@ -1,0 +1,10 @@
+{% extends 'formtool_base.html' %}
+
+{% block content %}
+  <div class="container mx-auto py-10">
+    <h1 class="text-3xl font-bold mb-5">Welcome to My Project</h1>
+    <p class="text-lg mb-5">This is a simple Django project using HTML and TailwindCSS CDN for the frontend and django-formtools for forms.</p>
+    <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{% url 'wizard' %}">Contact Us</a>
+  </div>
+</body>
+{% endblock %}

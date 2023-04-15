@@ -48,7 +48,10 @@ from maps.views import (
     record,
     save_recording,
     upload_file,
-    download_file
+    download_file,
+    ContactWizard,
+    home_view,
+    done
 )
 
 # from dal import autocomplete
@@ -57,7 +60,7 @@ from maps.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", index, name="map"),
+    path("map/", index, name="map"),
     path("file_upload/", file_upload, name="file_upload"),
     path("image_upload/", image_upload, name="image_upload"),
     path("image_uploads/", image_uploads, name="image_uploads"),
@@ -69,7 +72,7 @@ urlpatterns = [
     path("accept/<str:token>/", accept, name="accept"),
     path("error/", error, name="error"),
     path("decline/", decline, name="decline"),
-    path("contact/", ContactView.as_view(), name="contact"),
+    path("contact2/", ContactView.as_view(), name="contact2"),
     path("contact_success/", contact_success, name="contact_success"),
     path("contact_view/", contact_view, name="contact_view"),
     path("captcha/", include("captcha.urls")),
@@ -98,7 +101,9 @@ urlpatterns = [
     path('save-recording/', save_recording, name='save-recording'),
     path('upload-file/', upload_file, name='upload-file'),
     path('download-file/', download_file, name='download-file'),
+    path('', home_view, name='home'),
+    path('wizard/', ContactWizard.as_view(), name='wizard'),
+    path('done/', done, name='done'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
