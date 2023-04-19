@@ -51,7 +51,9 @@ from maps.views import (
     download_file,
     ContactWizard,
     home_view,
-    done
+    done,
+    search,
+    index
 )
 
 # from dal import autocomplete
@@ -104,6 +106,8 @@ urlpatterns = [
     path('', home_view, name='home'),
     path('wizard/', ContactWizard.as_view(), name='wizard'),
     path('done/', done, name='done'),
+       path('index/', index, name='index'),
+    path('search/', search, name='search'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

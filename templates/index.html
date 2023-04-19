@@ -1,0 +1,11 @@
+{% extends 'hx-on-base.html' %}
+
+{% block content %}
+    <div class="container mx-auto mt-10">
+        <input type="text" name="search" id="search" placeholder="Search todos..." class="w-full p-2 border border-gray-300 rounded" hx-post="{% url 'search' %}" hx-trigger="keyup changed delay:500ms" hx-target="#todos-container" hx-indicator=".indicator" hx-swap="innerHTML">
+        <span class="indicator">Searching...</span>
+        <div id="todos-container">
+            {% include 'todo.html' %}
+        </div>
+    </div>
+{% endblock %}
