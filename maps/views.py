@@ -568,3 +568,8 @@ def search(request):
         if search in i['title']:
             res_todos.append(i)
     return render(request, 'todo2.html', {'todos': res_todos})
+
+
+
+def home2(request):
+    return render(request, "home2.html", context={'request': request})

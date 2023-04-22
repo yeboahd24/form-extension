@@ -187,3 +187,6 @@ EMAIL_PORT = '2525'
 
 AUTH_USER_MODEL = 'maps.User'
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+
+SESSION_COOKIE_AGE = 60
+SESSION_SAVE_EVERY_REQUEST = True

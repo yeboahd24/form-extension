@@ -53,7 +53,8 @@ from maps.views import (
     home_view,
     done,
     search,
-    index
+    index,
+    home2
 )
 
 # from dal import autocomplete
@@ -108,6 +109,7 @@ urlpatterns = [
     path('done/', done, name='done'),
        path('index/', index, name='index'),
     path('search/', search, name='search'),
+    path('home2/', home2, name='home2'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
