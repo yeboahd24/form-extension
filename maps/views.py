@@ -373,6 +373,7 @@ from rest_framework import generics
 from .models import Todo
 from .serializers import TodoSerializer
 
+
 class TodoList(generics.ListCreateAPIView):
     queryset = Todo.objects.all()
     serializer_class = TodoSerializer
@@ -382,27 +383,27 @@ def todo(request):
     return render(request, "todo.html")
 
 
-
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from rest_framework.parsers import JSONParser
 from .models import Todo
 from .serializers import TodoSerializer
 
+
 @csrf_exempt
 def todo_list(request):
-    if request.method == 'GET':
+    if request.method == "GET":
         todos = Todo.objects.all()
         serializer = TodoSerializer(todos, many=True)
         return JsonResponse(serializer.data, safe=False)
-    elif request.method == 'POST':
+    elif request.method == "POST":
         data = JSONParser().parse(request)
         serializer = TodoSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
-    
+
 
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -410,26 +411,29 @@ from .models import Task
 from .forms import TaskForm
 from dal import autocomplete
 
+
 class TaskListView(ListView):
     model = Task
-    template_name = 'task_list.html'
+    template_name = "task_list.html"
+
 
 class TaskCreateView(CreateView):
     model = Task
     form_class = TaskForm
-    template_name = 'task_form.html'
-    success_url = reverse_lazy('task_list')
+    template_name = "task_form.html"
+    success_url = reverse_lazy("task_list")
+
 
 class TaskUpdateView(UpdateView):
     model = Task
     form_class = TaskForm
-    template_name = 'task_form.html'
-    success_url = reverse_lazy('task_list')
+    template_name = "task_form.html"
+    success_url = reverse_lazy("task_list")
+
 
 class TaskDeleteView(DeleteView):
     model = Task
-    success_url = reverse_lazy('task_list')
-
+    success_url = reverse_lazy("task_list")
 
 
 class TaskAutoComplete(autocomplete.Select2QuerySetView):
@@ -440,28 +444,25 @@ class TaskAutoComplete(autocomplete.Select2QuerySetView):
         return qs
 
 
-
 from django.http import JsonResponse
 from maps.models import Recording
 from django.views.decorators.csrf import csrf_exempt
 
+
 @csrf_exempt
 def save_recording(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         recording = Recording()
-        recording.audio_file = request.FILES['audio_file']
+        recording.audio_file = request.FILES["audio_file"]
         recording.save()
-        return JsonResponse({'status': 'ok'})
+        return JsonResponse({"status": "ok"})
     else:
-        return JsonResponse({'status': 'error'})
-
+        return JsonResponse({"status": "error"})
 
 
 @csrf_exempt
 def record(request):
-    return render(request, 'record.html')
-
-
+    return render(request, "record.html")
 
 
 from django.shortcuts import render, redirect
@@ -476,15 +477,16 @@ import tempfile
 def download_file(request, pk):
     file = File.objects.get(pk=pk)
     response = HttpResponse(file.zip_file.read())
-    response['Content-Type'] = 'application/zip'
-    response['Content-Disposition'] = f'attachment; filename="{file.uploaded_file.name}.zip"'
+    response["Content-Type"] = "application/zip"
+    response[
+        "Content-Disposition"
+    ] = f'attachment; filename="{file.uploaded_file.name}.zip"'
     return response
-
 
 
 def zip_files(file_list):
     with tempfile.NamedTemporaryFile(delete=False) as temp_zip:
-        with zipfile.ZipFile(temp_zip, 'w') as zip_file:
+        with zipfile.ZipFile(temp_zip, "w") as zip_file:
             for f in file_list:
                 with TemporaryFileUploadHandler(f, None) as handler:
                     handler.file_name = f.name
@@ -492,9 +494,10 @@ def zip_files(file_list):
                     zip_file.write(uploaded_file.name, uploaded_file.name)
     return temp_zip.name
 
+
 def upload_file(request):
-    if request.method == 'POST':
-        file_list = request.FILES.getlist('file')
+    if request.method == "POST":
+        file_list = request.FILES.getlist("file")
         temp_files = []
         for uploaded_file in file_list:
             with TemporaryFileUploadHandler(uploaded_file, None) as handler:
@@ -502,18 +505,12 @@ def upload_file(request):
                 temp_file = handler.file.file
                 temp_files.append(temp_file)
         zip_file_path = zip_files(temp_files)
-        with open(zip_file_path, 'rb') as zip_file:
-            response = HttpResponse(zip_file.read(), content_type='application/zip')
+        with open(zip_file_path, "rb") as zip_file:
+            response = HttpResponse(zip_file.read(), content_type="application/zip")
             # save the zip file in the response as the name of the original file
-            response['Content-Disposition'] = f'attachment; filename="file.zip"'
+            response["Content-Disposition"] = f'attachment; filename="file.zip"'
             return response
-    return render(request, 'upload_file.html')
-
-
-
-
-
-
+    return render(request, "upload_file.html")
 
 
 from django.shortcuts import render
@@ -521,55 +518,222 @@ from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from django import forms
 from formtools.wizard.views import SessionWizardView
+
+
 class ContactForm1(forms.Form):
     name = forms.CharField()
     email = forms.EmailField()
     age = forms.IntegerField()
 
+
 class ContactForm2(forms.Form):
     subject = forms.CharField()
     message = forms.CharField(widget=forms.Textarea)
 
+
 class ContactWizard(SessionWizardView):
     form_list = [ContactForm1, ContactForm2]
-    template_name = 'contact_form.html'
-    success_url = '/done/'
+    template_name = "contact_form.html"
+    success_url = "/done/"
 
     def done(self, form_list, **kwargs):
         form_data = process_form_data(form_list)
-        return render(self.request, 'done.html', {'form_data': form_data})
+        return render(self.request, "done.html", {"form_data": form_data})
+
 
 def process_form_data(form_list):
     form_data = [form.cleaned_data for form in form_list]
     return form_data
 
+
 def home_view(request):
-    return render(request, 'home.html', {})
+    return render(request, "home.html", {})
+
 
 def done(request):
-    return render(request, 'done.html', {})
-
+    return render(request, "done.html", {})
 
 
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from .todo import todos
 
-def index(request):
-    return render(request, 'index.html', {'todos': []})
 
-@require_http_methods(['POST'])
+def index(request):
+    return render(request, "index.html", {"todos": []})
+
+
+@require_http_methods(["POST"])
 def search(request):
     res_todos = []
-    search = request.POST['search']
+    search = request.POST["search"]
     if len(search) == 0:
-        return render(request, 'todo2.html', {'todos': []})
+        return render(request, "todo2.html", {"todos": []})
     for i in todos:
-        if search in i['title']:
+        if search in i["title"]:
             res_todos.append(i)
-    return render(request, 'todo2.html', {'todos': res_todos})
-
+    return render(request, "todo2.html", {"todos": res_todos})
 
 
 def home2(request):
-    return render(request, "home2.html", context={'request': request})
+    return render(request, "home2.html", context={"request": request})
+
+
+# from django.http import JsonResponse
+# from .langchain_utils import process_health_input
+
+# def health_chatbot(request):
+#     user_input = request.GET.get("input", "")
+#     response = process_health_input(user_input)
+#     return JsonResponse({"response": response})
+
+# def chat_bot(request):
+#     return render(request, "bot.html", context={'request': request})
+
+from rest_framework import generics
+from rest_framework import status
+from rest_framework import serializers
+from rest_framework.response import Response
+from .models import Appointment, Doctor
+from .serializers import AppointmentSerializer
+
+
+class AppointmentCreateAPIView(generics.CreateAPIView):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+
+    def perform_create(self, serializer):
+        doctor = self.request.data.get("doctor")
+        doc = Doctor.objects.get(user=doctor)
+        print(doc.id)
+        appointment_time = self.request.data.get("appointment_time")
+
+        # Check if the doctor has an appointment at the requested time
+        existing_appointments = Appointment.objects.filter(
+            doctor=doctor, appointment_time=appointment_time
+        )
+
+        if existing_appointments.exists():
+            # The doctor is not available at the requested time
+            raise serializers.ValidationError(
+                "The doctor is not available at the requested time."
+            )
+        else:
+            serializer.save()
+
+
+def is_slot_available(schedule, start_time, end_time):
+    schedule_start_time = datetime.datetime.combine(
+        start_time.date(), schedule.start_time
+    )
+    schedule_end_time = datetime.datetime.combine(start_time.date(), schedule.end_time)
+    break_start_time = datetime.datetime.combine(
+        start_time.date(), schedule.break_start_time
+    )
+    break_end_time = datetime.datetime.combine(
+        start_time.date(), schedule.break_end_time
+    )
+
+    return (
+        start_time >= schedule_start_time and end_time <= schedule_end_time
+    ) and not (start_time >= break_start_time and end_time <= break_end_time)
+
+
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, status
+from rest_framework.response import Response
+from .models import Doctor, DoctorAppointment, DoctorSchedule
+from .serializers import DoctorAppointmentSerializer
+import datetime
+
+
+class BookAppointmentView(generics.CreateAPIView):
+    queryset = DoctorAppointment.objects.all()
+    serializer_class = DoctorAppointmentSerializer
+
+    def create(self, request, *args, **kwargs):
+        doctor_id = kwargs["doctor_id"]
+        start_time = request.data.get("appointment_start_time")
+        end_time = request.data.get("appointment_end_time")
+
+        # Convert strings to datetime objects
+        start_time = datetime.datetime.strptime(start_time, "%Y-%m-%dT%H:%M:%S")
+        end_time = datetime.datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S")
+
+           # Validate start_time and end_time
+        if not start_time or not end_time:
+            return Response({"error": "Both appointment_start_time and appointment_end_time are required."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Convert strings to datetime objects
+            try:
+                start_time = datetime.datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
+            except ValueError:
+                start_time = datetime.datetime.strptime(start_time, '%Y-%m-%dT%H:%M')
+
+            try:
+                end_time = datetime.datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%S')
+            except ValueError:
+                end_time = datetime.datetime.strptime(end_time, '%Y-%m-%dT%H:%M')
+        except ValueError:
+            return Response({"error": "Invalid date format. Use ISO 8601 format (e.g., '2023-04-24T09:30:00' or '2023-04-24T09:30')"},
+                            status=status.HTTP_400_BAD_REQUEST)
+        # Check if the requested time slot is available
+        overlapping_appointments = DoctorAppointment.objects.filter(
+            doctor_id=doctor_id,
+            appointment_start_time__lt=end_time,
+            appointment_end_time__gt=start_time,
+        )
+
+        if overlapping_appointments.exists():
+            return Response(
+                {"error": "The requested time slot is already booked."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Check if the requested time slot is within the doctor's schedule
+        doctor = get_object_or_404(Doctor, pk=doctor_id)
+        schedules = DoctorSchedule.objects.filter(doctor=doctor)
+
+        for schedule in schedules:
+            if schedule.day_of_week == start_time.weekday() and is_slot_available(
+                schedule, start_time, end_time
+            ):
+                serializer = self.get_serializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+                headers = self.get_success_headers(serializer.data)
+                return Response(
+                    serializer.data, status=status.HTTP_201_CREATED, headers=headers
+                )
+
+        return Response(
+            {"error": "The requested time slot is not within the doctor's schedule."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+from rest_framework import generics
+from rest_framework.response import Response
+from .models import DoctorSchedule
+from .serializers import DoctorScheduleSerializer
+from .calculate_available_slots import calculate_available_slots
+
+
+class DoctorAvailableSlotsAPIView(generics.ListAPIView):
+    serializer_class = DoctorScheduleSerializer
+
+    def get_queryset(self):
+        doctor_id = self.kwargs["doctor_id"]
+        return DoctorSchedule.objects.filter(doctor_id=doctor_id)
+
+    def list(self, request, *args, **kwargs):
+        doctor_id = self.kwargs["doctor_id"]
+        queryset = self.get_queryset()
+        serializer = DoctorScheduleSerializer(queryset, many=True)
+
+        # Calculate available time slots based on the doctor's schedule and existing appointments
+        available_slots = calculate_available_slots(doctor_id, serializer.data)
+
+        return Response(available_slots)

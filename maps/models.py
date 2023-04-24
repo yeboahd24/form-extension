@@ -134,3 +134,39 @@ class File(models.Model):
 
     def __str__(self):
         return self.uploaded_file.name
+
+
+
+
+class Doctor(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # Add any other relevant fields for the doctor
+
+    def __str__(self):
+        return self.user.email
+
+class Appointment(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    client = models.ForeignKey(User, on_delete=models.CASCADE)
+    appointment_time = models.DateField()
+    # Add any other relevant fields for the appointment
+
+    def __str__(self):
+        return f"{self.doctor.user.email} with {self.client.email}"
+
+
+
+
+
+class DoctorSchedule(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    day_of_week = models.CharField(max_length=20)
+    start_time = models.TimeField()
+    break_start_time = models.TimeField()
+    break_end_time = models.TimeField()
+    end_time = models.TimeField()
+
+class DoctorAppointment(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    appointment_start_time = models.DateTimeField()
+    appointment_end_time = models.DateTimeField()

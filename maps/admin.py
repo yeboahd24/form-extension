@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Data, Image, Image2, Invitation,OneTimeUseLink
+from .models import Data, Image, Image2, Invitation,OneTimeUseLink, Doctor, Appointment, DoctorSchedule, DoctorAppointment
 
 # Register your models here.
 
@@ -13,3 +13,7 @@ admin.site.register(Image)
 admin.site.register(Image2)
 admin.site.register(Invitation)
 admin.site.register(OneTimeUseLink)
+admin.site.register(Doctor)
+admin.site.register(Appointment)
+admin.site.register(DoctorSchedule)
+admin.site.register(DoctorAppointment)
