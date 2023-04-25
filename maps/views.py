@@ -653,32 +653,36 @@ class BookAppointmentView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         doctor_id = kwargs["doctor_id"]
+        seconds = ':00'
         start_time = request.data.get("appointment_start_time")
         end_time = request.data.get("appointment_end_time")
+        start_time+=seconds
+        end_time+=seconds
+        print(start_time, end_time)
 
         # Convert strings to datetime objects
-        start_time = datetime.datetime.strptime(start_time, "%Y-%m-%dT%H:%M:%S")
-        end_time = datetime.datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S")
+        start_time = datetime.datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
+        end_time = datetime.datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%S')
 
            # Validate start_time and end_time
         if not start_time or not end_time:
             return Response({"error": "Both appointment_start_time and appointment_end_time are required."},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            # Convert strings to datetime objects
-            try:
-                start_time = datetime.datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
-            except ValueError:
-                start_time = datetime.datetime.strptime(start_time, '%Y-%m-%dT%H:%M')
+        # try:
+        #     # Convert strings to datetime objects
+        #     try:
+        #         start_time = datetime.datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
+        #     except ValueError:
+        #         start_time = datetime.datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
 
-            try:
-                end_time = datetime.datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%S')
-            except ValueError:
-                end_time = datetime.datetime.strptime(end_time, '%Y-%m-%dT%H:%M')
-        except ValueError:
-            return Response({"error": "Invalid date format. Use ISO 8601 format (e.g., '2023-04-24T09:30:00' or '2023-04-24T09:30')"},
-                            status=status.HTTP_400_BAD_REQUEST)
+        #     try:
+        #         end_time = datetime.datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%S')
+        #     except ValueError:
+        #         end_time = datetime.datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%S')
+        # except ValueError:
+        #     return Response({"error": "Invalid date format. Use ISO 8601 format (e.g., '2023-04-24T09:30:00' or '2023-04-24T09:30')"},
+        #                     status=status.HTTP_400_BAD_REQUEST)
         # Check if the requested time slot is available
         overlapping_appointments = DoctorAppointment.objects.filter(
             doctor_id=doctor_id,
