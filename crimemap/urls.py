@@ -59,7 +59,8 @@ from maps.views import (
     # chat_bot
     AppointmentCreateAPIView,
     DoctorAvailableSlotsAPIView,
-    BookAppointmentView
+    BookAppointmentView,
+    password_checker,
 )
 
 # from dal import autocomplete
@@ -120,6 +121,7 @@ urlpatterns = [
     path('api/appointments/', AppointmentCreateAPIView.as_view(), name='appointments'),
     path('doctors/<int:doctor_id>/available_slots/', DoctorAvailableSlotsAPIView.as_view(), name='doctor-available-slots'),
     path('doctors/<int:doctor_id>/book_appointment/', BookAppointmentView.as_view(), name='book_appointment'),
+    path('password_checker/', password_checker, name='password_checker'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

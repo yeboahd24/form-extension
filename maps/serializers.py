@@ -21,13 +21,12 @@ from .models import DoctorSchedule, DoctorAppointment
 class DoctorScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorSchedule
-        fields = ('doctor', 'day_of_week', 'start_time', 'break_start_time', 'break_end_time', 'end_time')
+        fields = ('doctor', 'day_of_week', 'start_time', 'break_start_time', 'break_end_time', 'end_time', 'date')
 
 class DoctorAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorAppointment
         fields = ('doctor', 'appointment_start_time', 'appointment_end_time')
-
 
 
 
@@ -36,4 +35,4 @@ from .models import DoctorAppointment
 class DoctorAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorAppointment
-        fields = ('doctor', 'appointment_start_time', 'appointment_end_time')
+        fields = ('doctor', 'appointment_start_time', 'appointment_end_time', 'date')

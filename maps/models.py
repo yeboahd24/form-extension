@@ -165,8 +165,10 @@ class DoctorSchedule(models.Model):
     break_start_time = models.TimeField()
     break_end_time = models.TimeField()
     end_time = models.TimeField()
+    date =  models.DateField(blank=True, null=True)
 
 class DoctorAppointment(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    appointment_start_time = models.DateTimeField()
-    appointment_end_time = models.DateTimeField()
+    appointment_start_time = models.TimeField()
+    appointment_end_time = models.TimeField()
+    date =  models.DateField(blank=True, null=True)

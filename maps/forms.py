@@ -78,4 +78,12 @@ class FileForm(forms.Form):
     uploaded_file = forms.FileField()
 
 
+from django.contrib.auth.password_validation import validate_password
 
+class PasswordCheckerForm(forms.Form):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Enter your password'}))
+
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        validate_password(password)
+        return password
