@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Net Promoter Score</title>
+    <link href="https://unpkg.com/[email protected]/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+</head>
+
+<body>
+    <div class="container mx-auto mt-10">
+        <h1 class="text-3xl font-bold mb-5">We'd love to hear your feedback!</h1>
+        <form id="feedback-form">
+            <label class="block mb-2">Your name</label>
+            <input id="name" type="text" class="w-full p-2 mb-5 border" placeholder="Your name" required>
+
+            <label class="block mb-2">Product name</label>
+            <input id="product_name" type="text" class="w-full p-2 mb-5 border" placeholder="Product name" required>
+
+            <label class="block mb-2">Rating</label>
+            <div class="star-rating">
+                <input type="radio" name="rating" id="rating-5" value="5" required>
+                <label for="rating-5" class="text-2xl">☆</label>
+                <input type="radio" name="rating" id="rating-4" value="4">
+                <label for="rating-4" class="text-2xl">☆</label>
+                <input type="radio" name="rating" id="rating-3" value="3">
+                <label for="rating-3" class="text-2xl">☆</label>
+                <input type="radio" name="rating" id="rating-2" value="2">
+                <label for="rating-2" class="text-2xl">☆</label>
+                <input type="radio" name="rating" id="rating-1" value="1">
+                <label for="rating-1" class="text-2xl">☆</label>
+            </div>
+
+            <label class="block mb-2 mt-5">Feedback</label>
+            <textarea id="feedback" class="w-full h-32 border p-2 mb-5" required></textarea>
+
+            <button type="submit"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
+        </form>
+        <!-- Modal -->
+        <div id="modal" class="fixed inset-0 hidden flex items-center justify-center z-50">
+            <div class="bg-white rounded-lg p-8 max-w-md mx-auto">
+                <h3 class="text-xl font-semibold mb-4">Thank you for your feedback!</h3>
+                <p id="modal-content" class="mb-6"></p>
+                <!-- <button id="modal-close" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Close
+                </button> -->
+            </div>
+            <div class="fixed inset-0 bg-black opacity-50"></div>
+        </div>
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
+    <script>
+        document.getElementById("feedback-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            // const rating = parseInt(document.getElementById("rating").value);
+            const rating = document.querySelector('input[name="rating"]:checked').value;
+            const feedback = document.getElementById("feedback").value;
+            const name = document.getElementById("name").value;
+            const product_name = document.getElementById("product_name").value;
+
+            const data = {
+                "name": name,
+                "product_name": product_name,
+                "rating": rating,
+                "feedback": feedback
+            };
+
+            fetch("/feedback/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    let thankYouMessage = "";
+                    if (rating >= 0 && rating <= 2) {
+                        thankYouMessage = `Thanks for your feedback, ${name}. We do value your opinion greatly as it is an opportunity to meet your expectations. In due time, our team will reach out to you to understand your needs and improve your experience.`;
+                    } else if (rating === 3) {
+                        thankYouMessage = `Thanks for your feedback, ${name}. We appreciate your suggestions and hope to make your experience better the next time you visit.`;
+                    } else if (rating >= 4 && rating <= 5) {
+                        thankYouMessage = `Thanks for your feedback, ${name}. It is an honour knowing we serve you well, giving us the opportunity to improve your experience on every visit.`;
+                    }
+
+                    document.getElementById("modal-content").innerHTML = thankYouMessage;
+                    document.getElementById("modal").classList.remove("hidden");
+
+                    setTimeout(function () {
+                        document.getElementById("modal").classList.add("hidden");
+                    }, 5000);
+                    // document.getElementById("modal-close").addEventListener("click", function () {
+                    //     document.getElementById("modal").classList.add("hidden");
+                    // });
+                });
+        });
+    </script>
+
+</body>
+
+</html>
