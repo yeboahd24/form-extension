@@ -185,3 +185,40 @@ class Feedback(models.Model):
     product_name = models.CharField(max_length=255)
     rating = models.IntegerField(choices=RATING_CHOICES)
     feedback = models.TextField()
+    # nps = models.FloatField(default=0)
+
+    def __str__(self):
+        return self.name
+    
+
+class NPS(models.Model):
+    nps = models.IntegerField(default=0)
+
+    # def __str__(self):
+    #     return self.nps
+
+# Write a signal that get all users rating then perform this function 
+# NPS = % of promoters – % of detractors
+# Promoters- Respondents who choose a score of 4 and 5
+# Detractors- Respondents who choose a score from 0 to 2
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+@receiver(post_save, sender=Feedback)
+def calculate_nps(sender, instance, created, **kwargs):
+    if created:
+        feedback_count = Feedback.objects.count()
+        if feedback_count > 0:
+            promoters = Feedback.objects.filter(rating__gte=4).count()
+            detractors = Feedback.objects.filter(rating__lte=2).count()
+            promoter_percent = promoters / feedback_count * 100
+            detractor_percent = detractors / feedback_count * 100
+            nps = promoter_percent - detractor_percent
+            _nps = NPS.objects.create(nps=nps)
+            print(nps)
+            _nps.save()
+
+
+
+
