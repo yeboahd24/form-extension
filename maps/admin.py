@@ -10,7 +10,8 @@ from .models import (
     DoctorSchedule,
     DoctorAppointment,
     Feedback,
-    NPS
+    NPS,
+    Appointment2
 )
 
 # Register your models here.
@@ -31,3 +32,4 @@ admin.site.register(DoctorSchedule)
 admin.site.register(DoctorAppointment)
 admin.site.register(Feedback)
 admin.site.register(NPS)
+admin.site.register(Appointment2)

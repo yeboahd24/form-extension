@@ -197,7 +197,7 @@ class NPS(models.Model):
     # def __str__(self):
     #     return self.nps
 
-# Write a signal that get all users rating then perform this function 
+# A signal that get all users rating then perform this function 
 # NPS = % of promoters – % of detractors
 # Promoters- Respondents who choose a score of 4 and 5
 # Detractors- Respondents who choose a score from 0 to 2
@@ -222,3 +222,8 @@ def calculate_nps(sender, instance, created, **kwargs):
 
 
 
+class Appointment2(models.Model):
+    title = models.CharField(max_length=255)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    description = models.TextField()

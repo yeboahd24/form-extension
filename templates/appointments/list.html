@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Appointment List</title>
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css">
+</head>
+<body>
+    <div class="container mx-auto mt-8">
+        <h1 class="text-2xl font-bold mb-4">Appointment List</h1>
+        <table class="table-auto">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2">Title</th>
+                    <th class="px-4 py-2">Description</th>
+                    <th class="px-4 py-2">Start Time</th>
+                    <th class="px-4 py-2">End Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                <tr>
+                    <td class="border px-4 py-2">{{ appointment.title }}</td>
+                    <td class="border px-4 py-2">{{ appointment.description }}</td>
+                    <td class="border px-4 py-2">{{ appointment.start_time }}</td>
+                    <td class="border px-4 py-2">{{ appointment.end_time }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td class="border px-4 py-2" colspan="4">No appointments found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

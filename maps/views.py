@@ -777,3 +777,65 @@ class FeedbackCreateAPIView(generics.CreateAPIView):
 
 def feedback(request):
     return render(request, "feedback.html")
+
+
+
+
+from datetime import datetime, timedelta, time
+from django.shortcuts import render
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from .forms import AppointmentForm
+from icalendar import Calendar, Event
+
+def create_appointment(request):
+    if request.method == 'POST':
+        form = AppointmentForm(request.POST)
+        if form.is_valid():
+            appointment = form.save(commit=False)
+            event_title = appointment.title
+            event_description = appointment.description
+            cal = Calendar()
+            start_time = datetime.combine(datetime.today(), time(9, 0))
+            end_time = datetime.combine(datetime.today(), time(17, 0))
+            lunch_start = datetime.combine(datetime.today(), time(12, 0))
+            lunch_end = datetime.combine(datetime.today(), time(13, 0))
+            while start_time < end_time:
+                if start_time < lunch_start:
+                    event = Event()
+                    event.add('summary', event_title)
+                    event.add('description', event_description)
+                    event.add('dtstart', start_time)
+                    event.add('dtend', start_time + timedelta(minutes=30))
+                    cal.add_component(event)
+                    start_time += timedelta(minutes=30)
+                elif start_time >= lunch_end:
+                    event = Event()
+                    event.add('summary', event_title)
+                    event.add('description', event_description)
+                    event.add('dtstart', start_time)
+                    event.add('dtend', start_time + timedelta(minutes=30))
+                    cal.add_component(event)
+                    start_time += timedelta(minutes=30)
+                else:
+                    start_time = lunch_end
+            cal_content = cal.to_ical()
+            # Save the iCalendar file to a location accessible by your patients
+            with open('your_calendar.ics', 'wb') as f:
+                f.write(cal_content)
+            messages.success(request, 'Appointment created successfully.')
+            appointment.save()
+            return HttpResponseRedirect(reverse('appointments'))
+    else:
+        form = AppointmentForm()
+    return render(request, 'appointments/create.html', {'form': form})
+
+
+
+from .models import Appointment2
+
+
+def appointment_list(request):
+    appointments = Appointment2.objects.all()
+    return render(request, 'appointments/list.html', {'appointments': appointments})

@@ -87,3 +87,12 @@ class PasswordCheckerForm(forms.Form):
         password = self.cleaned_data.get('password')
         validate_password(password)
         return password
+
+
+
+from .models import Appointment2
+
+class AppointmentForm(forms.ModelForm):
+    class Meta:
+        model = Appointment2
+        fields = ['title', 'start_time', 'end_time', 'description']
