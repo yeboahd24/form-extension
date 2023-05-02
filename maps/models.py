@@ -193,9 +193,10 @@ class Feedback(models.Model):
 
 class NPS(models.Model):
     nps = models.IntegerField(default=0)
+    date_created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
-    # def __str__(self):
-    #     return self.nps
+    def __str__(self):
+        return self.date_created.strftime('%Y-%m-%dT%H:%M')
 
 # A signal that get all users rating then perform this function 
 # NPS = % of promoters – % of detractors
@@ -227,3 +228,11 @@ class Appointment2(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     description = models.TextField()
+
+
+class UploadedFile(models.Model):
+    file = models.FileField(upload_to='uploads/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.file.name

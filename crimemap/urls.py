@@ -64,7 +64,8 @@ from maps.views import (
     FeedbackCreateAPIView,
     feedback,
     create_appointment,
-    appointment_list
+    appointment_list,
+    UploadView
 )
 
 # from dal import autocomplete
@@ -129,7 +130,8 @@ urlpatterns = [
     path('feedback/', FeedbackCreateAPIView.as_view(), name='feedback-create'),
     path('feedbacks/', feedback, name='feedbacks'),
     path('create_appointment/', create_appointment, name='create_appointment'),
-    path('appointments/', appointment_list, name='appointments')
+    path('appointments/', appointment_list, name='appointments'),
+    path('upload/', UploadView.as_view(), name='upload'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

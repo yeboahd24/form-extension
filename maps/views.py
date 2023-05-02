@@ -839,3 +839,18 @@ from .models import Appointment2
 def appointment_list(request):
     appointments = Appointment2.objects.all()
     return render(request, 'appointments/list.html', {'appointments': appointments})
+
+
+
+from django.views.generic import View
+from django.http import JsonResponse
+from .models import UploadedFile
+
+class UploadView(View):
+    def get(self, request):
+        return render(request, 'appointments/upload.html')
+
+    def post(self, request):
+        file = request.FILES.get('file')
+        uploaded_file = UploadedFile.objects.create(file=file)
+        return JsonResponse({'success': True, 'file_url': uploaded_file.file.url})
