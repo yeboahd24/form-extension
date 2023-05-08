@@ -854,3 +854,76 @@ class UploadView(View):
         file = request.FILES.get('file')
         uploaded_file = UploadedFile.objects.create(file=file)
         return JsonResponse({'success': True, 'file_url': uploaded_file.file.url})
+
+
+
+
+# myapp/views.py
+from django.shortcuts import render
+from django.http import JsonResponse
+from ipware import get_client_ip
+import requests
+
+def index(request):
+    if request.method == 'GET':
+        # get the client's IP address
+        client_ip, is_routable = get_client_ip(request)
+
+        # get the geo-location of the IP address using ipstack
+        url = f'http://api.ipstack.com/{client_ip}?access_key=d44a17f578b3a88bc58439ad4cb93030'
+        response = requests.get(url)
+        data = response.json()
+
+        # return a JSON response with the location data
+        return JsonResponse(data)
+    
+    # render the index.html template
+    return render(request, 'appointments/index.html')
+
+
+
+import pandas as pd
+import numpy as np
+from django.shortcuts import render
+
+import pickle
+
+def predict_diabetes(request):
+    if request.method == 'POST':
+        pregnancies = float(request.POST.get("pregnancies"))
+        glucose = float(request.POST.get("glucose"))
+        bp = float(request.POST.get("bp"))
+        skinthickness = float(request.POST.get("skinthickness"))
+        insulin = float(request.POST.get("insulin"))
+        bmi = float(request.POST.get("bmi"))
+        dpf = float(request.POST.get("dpf"))
+        age = float(request.POST.get("age"))
+
+        data = pd.DataFrame({
+            "Pregnancies":[pregnancies],
+            "Glucose":[glucose],
+            "BloodPressure":[bp],
+            "SkinThickness":[skinthickness],
+            "Insulin":[insulin],
+            "BMI":[bmi],
+            "DiabetesPedigreeFunction":[dpf],
+            "Age":[age]
+        })
+
+        # load the model
+        filename = '/home/backend/Map/diabetes.pkl'
+        loaded_model = pickle.load(open(filename, 'rb'))
+
+        # make a prediction
+        result = loaded_model.predict(data)
+        
+        if result[0] == 1:
+            prediction = "Positive"
+        else:
+            prediction = "Negative"
+
+        context = {'prediction': prediction}
+
+        return render(request,'prediction.html',context)
+    
+    return render(request,'prediction.html')

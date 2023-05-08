@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css">
+    <title>Disease Prediction</title>
+</head>
+<body class="bg-gray-100 h-screen">
+    <div class="container mx-auto py-8">
+        <h1 class="text-3xl font-bold">Disease Prediction</h1>
+        <form method="post" class="py-4">
+            {% csrf_token %}
+            <div class="grid gap-4 grid-cols-2">
+                <div>
+                    <label for="pregnancies" class="block font-bold mb-1">Pregnancies:</label>
+                    <input type="text" name="pregnancies" required class="w-full border border-gray-400 p-2 rounded-md focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-300">
+                </div>
+                <div>
+                    <label for="glucose" class="block font-bold mb-1">Glucose:</label>
+                    <input type="text" name="glucose" required class="w-full border border-gray-400 p-2 rounded-md focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-300">
+                </div>
+                <div>
+                    <label for="bp" class="block font-bold mb-1">Blood Pressure:</label>
+                    <input type="text" name="bp" required class="w-full border border-gray-400 p-2 rounded-md focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-300">
+                </div>
+                <div>
+                    <label for="skinthickness" class="block font-bold mb-1">Skin Thickness:</label>
+                    <input type="text" name="skinthickness" required class="w-full border border-gray-400 p-2 rounded-md focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-300">
+                </div>
+                <div>
+                    <label for="insulin" class="block font-bold mb-1">Insulin:</label>
+                    <input type="text" name="insulin" required class="w-full border border-gray-400 p-2 rounded-md focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-300">
+                </div>
+                <div>
+                    <label for="bmi" class="block font-bold mb-1">Body Mass Index:</label>
+                    <input type="text" name="bmi" required class="w-full border border-gray-400 p-2 rounded-md focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-300">
+                </div>
+                <div>
+                    <label for="dpf" class="block font-bold mb-1">Diabetes Pedigree Function:</label>
+                    <input type="text" name="dpf" required class="w-full border border-gray-400 p-2 rounded-md focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-300">
+                </div>
+                <div>
+                    <label for="age" class="block font-bold mb-1">Age:</label>
+                    <input type="text" name="age" required class="w-full border border-gray-400 p-2 rounded-md focus:outline-none focus:ring focus:ring-indigo-300 focus:border-indigo-300">
+                </div>
+            </div>
+            <button type="submit" class="bg-indigo-500 hover:bg-indigo-700 text-white py-2 px-4 rounded-md mt-4">Predict</button>
+        </form>
+        {% if prediction %}
+        <div class="result bg-green-200 p-4 rounded-md mt-4">
+            <h2 class="text-lg font-bold">The prediction is: {{ prediction }}</h2>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

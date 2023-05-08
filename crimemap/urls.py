@@ -65,7 +65,10 @@ from maps.views import (
     feedback,
     create_appointment,
     appointment_list,
-    UploadView
+    UploadView,
+    index,
+    predict_diabetes,
+    
 )
 
 # from dal import autocomplete
@@ -132,6 +135,8 @@ urlpatterns = [
     path('create_appointment/', create_appointment, name='create_appointment'),
     path('appointments/', appointment_list, name='appointments'),
     path('upload/', UploadView.as_view(), name='upload'),
+    path('location/', index, name='index'),
+    path('predict_diabetes/', predict_diabetes, name='predict_diabetes'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -32,8 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'dal',
-    'dal_select2',
+    "dal",
+    "dal_select2",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "formtools",
 ]
 
-CRISPY_TEMPLATE_PACK = 'tailwind'
+CRISPY_TEMPLATE_PACK = "tailwind"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -153,21 +153,21 @@ LOCATION_FIELD = {
 
 
 # adding configuration of leaflet
-LEAFLET_CONFIG={
-    'DEFAULT_CENTER':(0.3556,37.1833),
-    'DEFAULT_ZOOM':6,
-    'MAX_ZOOM':20,
-    'MIN_ZOOM':6,
-    'SCALE':'both',
+LEAFLET_CONFIG = {
+    "DEFAULT_CENTER": (0.3556, 37.1833),
+    "DEFAULT_ZOOM": 6,
+    "MAX_ZOOM": 20,
+    "MIN_ZOOM": 6,
+    "SCALE": "both",
 }
 
 # Maximum file size in bytes for temporary storage during file upload
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10 MB
 
 # Maximum file size in bytes for text input fields during form submission
-DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760   # 10 MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10 MB
 
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'doc', 'docx'}
+ALLOWED_EXTENSIONS = {"txt", "pdf", "doc", "docx"}
 
 # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # EMAIL_HOST = "smtp.gmail.com"
@@ -179,17 +179,17 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'doc', 'docx'}
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "admin@panabios.org"
 
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = 'b66c13b8340f57'
-EMAIL_HOST_PASSWORD = 'd88a0bc8b4f9d2'
-EMAIL_PORT = '2525'
+EMAIL_HOST = "sandbox.smtp.mailtrap.io"
+EMAIL_HOST_USER = "b66c13b8340f57"
+EMAIL_HOST_PASSWORD = "d88a0bc8b4f9d2"
+EMAIL_PORT = "2525"
 
 
-AUTH_USER_MODEL = 'maps.User'
-AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+AUTH_USER_MODEL = "maps.User"
+AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 
 # For auto logout
 SESSION_COOKIE_AGE = 60
 SESSION_SAVE_EVERY_REQUEST = True
 
-TIME_FORMAT = '%H:%M'
+TIME_FORMAT = "%H:%M"
